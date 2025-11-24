@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录回调</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page center">
+    <div class="card narrow">
+      <h2>正在处理登录...</h2>
+      <p id="message">请稍候，正在同步会话。</p>
+      <div class="card-actions">
+        <a class="btn primary" href="./">返回首页</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+  <script>
+    const supabase = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey);
+    const messageEl = document.getElementById("message");
+
+    const search = new URLSearchParams(window.location.search);
+    if (search.get("error_description")) {
+      messageEl.textContent = "登录失败：" + search.get("error_description");
+    }
+
+    async function syncSession() {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        messageEl.textContent = "获取会话失败：" + error.message;
+        return;
+      }
+      if (data.session) {
+        messageEl.textContent = "登录成功，正在跳转回首页...";
+        setTimeout(() => { window.location.href = "./"; }, 800);
+      } else {
+        messageEl.textContent = "未检测到会话，请重试登录。";
+      }
+    }
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        messageEl.textContent = "登录成功，正在跳转回首页...";
+        setTimeout(() => { window.location.href = "./"; }, 800);
+      }
+    });
+
+    syncSession();
+  </script>
+</body>
+</html>

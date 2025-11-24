@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bytebase 风格登录</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="badge">Supabase + FastAPI</div>
+      <h1>安全登录，连接你的团队</h1>
+      <p>GitHub/Google 一键授权，后端由 Supabase 托管，FastAPI 提供用户资料管理。</p>
+      <div class="progress" id="statusBar">准备就绪</div>
+    </section>
+    <section class="panel">
+      <div class="card" id="loginCard">
+        <h2>选择登录方式</h2>
+        <p class="muted">使用 Supabase OAuth 托管，保障 state/PKCE 安全。</p>
+        <div class="btn-group">
+          <button class="btn github" data-provider="github">GitHub 登录</button>
+          <button class="btn google" data-provider="google">Google 登录</button>
+        </div>
+        <div class="tip">登录后自动返回此页，展示个人信息。</div>
+      </div>
+
+      <div class="card hidden" id="profileCard">
+        <div class="profile-header">
+          <img id="avatar" src="" alt="avatar">
+          <div>
+            <p class="tag" id="providerTag"></p>
+            <h3 id="displayName"></h3>
+            <p id="email"></p>
+          </div>
+        </div>
+        <form id="profileForm">
+          <label>显示名称
+            <input type="text" id="inputDisplayName" placeholder="未设置">
+          </label>
+          <label>头像 URL
+            <input type="url" id="inputAvatarUrl" placeholder="https://">
+          </label>
+          <button type="submit" class="btn primary">更新资料</button>
+        </form>
+        <div class="card-actions">
+          <button class="btn ghost" id="refreshBtn">刷新资料</button>
+          <button class="btn danger" id="logoutBtn">退出登录</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
